@@ -8,18 +8,18 @@ class PreyModel(Model):
 
     def __init__(self, environment):
         super().__init__(environment)
-        print('Prey model')
 
     def create_agent(self):
         location = (
             randrange(0, self.environment.size_x),
             randrange(0, self.environment.size_y)
         )
-        max_age = randrange(0, 51)
-        birth_rate = randrange(0, 101)
+        # max_age = randrange(0, 51)
+        max_age = 5
+        # birth_rate = randrange(0, 101)
+        birth_rate = 20
         prey = Prey(
             self.environment,
-            0,
             location,
             max_age,
             birth_rate

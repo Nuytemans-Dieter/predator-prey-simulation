@@ -6,24 +6,27 @@ from models.Model import Model
 
 class HunterModel(Model):
 
-    max_birth_rate = 100
-    max_age = 20
-
     def __init__(self, environment):
         super().__init__(environment)
-        print('Hunter model')
+        self.max_birth_rate = 100
+        self.max_age = 20
 
     def create_agent(self):
         location = (
             randrange(0, self.environment.size_x),
             randrange(0, self.environment.size_y)
         )
-        max_age = randrange(0, 51)
-        energy_to_reproduce = randrange(0, 101)
-        energy_per_prey_eaten = randrange(0, 31)
+        # max_age = randrange(0, 51)
+        max_age = 30
+        # starting_energy = 0
+        starting_energy = 15
+        # energy_to_reproduce = randrange(0, 101)
+        energy_to_reproduce = 20
+        # energy_per_prey_eaten = randrange(0, 31)
+        energy_per_prey_eaten = 30
         hunter = Hunter(
             self.environment,
-            0,
+            starting_energy,
             location,
             max_age,
             energy_to_reproduce,

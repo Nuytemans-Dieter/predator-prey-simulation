@@ -1,10 +1,8 @@
 class Model:
 
-    agents = []
-
     def __init__(self, environment):
-        print('Model')
         self.environment = environment
+        self.agents = []
 
     def get_num_agents(self):
         return len( self.agents )
