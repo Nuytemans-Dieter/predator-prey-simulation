@@ -25,3 +25,16 @@ class Prey(Agent):
         if self.age >= self.max_age:
             self.environment.kill_prey( self )
             self.environment.prey_deaths_by_age += 1
+
+    def get_actions(self):
+        return[self.add_location([0,1]), self.add_location([0,-1]), self.add_location([-1,0]), self.add_location([1,0])]
+
+    def get_state(self):
+        closestLoc = self.environment.get_nearest_hunter(self.location)
+        if closestLoc == 0:
+            closestX = self.environment.size_x
+            closestY = self.environment.size_y
+        else:
+            closestX = closestLoc.location[0]
+            closestY = closestLoc.location[1]
+        return [self.age, closestX, closestY]

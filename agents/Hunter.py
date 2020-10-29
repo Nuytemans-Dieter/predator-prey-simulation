@@ -44,3 +44,16 @@ class Hunter(Agent):
                 self.environment.hunter_deaths_by_energy += 1
             else:
                 self.environment.hunter_deaths_by_age += 1
+
+    def get_actions(self):
+        return[self.add_location([0,1]), self.add_location([0,-1]), self.add_location([-1,0]), self.add_location([1,0]), self.energy_to_reproduce >= self.energy]
+
+    def get_state(self):
+        closestLoc = self.environment.get_nearest_prey(self.location)
+        if closestLoc == 0:
+            closestX = self.environment.size_x
+            closestY = self.environment.size_y
+        else:
+            closestX = closestLoc.location[0]
+            closestY = closestLoc.location[1]
+        return [self.age, self.energy, closestX, closestY]

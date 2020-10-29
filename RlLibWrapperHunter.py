@@ -7,8 +7,6 @@ class RlLibWrapperPrey(gym.Env):
 
 
     def __init__(self):
-        self.action_space = EnvironmentSimulator()
-        self.observation_space = EnvironmentSimulator()
         self.simulator = EnvironmentSimulator()
 
     def reset(self):
@@ -23,17 +21,17 @@ class RlLibWrapperPrey(gym.Env):
         # TODO Reward wordt nog open gelaten
         reward = 0
 
-        for prey in self.simulator.preyModel:
+        for hunter in self.simulator.hunterModel:
             # TODO Momenteel random stap, moet aangepast worden
-            prey.move()
+            hunter.move()
             obs.append({
-                "obs": prey.get_state(),
+                "obs": hunter.get_state(),
                 "reward": reward,
                 # TODO: Verplaats het toevoegen van done naar na achter de step van de hunters
-                "done": not self.simulator.preyModel.agents.__contains__( prey )
+                "done": not self.simulator.hunterModel.agents.__contains__( hunter )
             })
 
         # Make simulator only move the hunters
-        self.simulator.simulate_step(do_hunters=1, do_preys=0)
+        self.simulator.simulate_step(do_hunters=0, do_preys=1)
 
         return obs

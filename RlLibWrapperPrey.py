@@ -3,7 +3,7 @@ import gym as gym
 from EnvironmentSimulator import EnvironmentSimulator
 
 
-class RlLibWrapper(gym.Env):
+class RlLibWrapperPrey(gym.Env):
 
 
     def __init__(self):

@@ -32,5 +32,14 @@ class Agent:
 
         return move
 
+    def add_location(self, add):
+        return [self.location[0] + add[0], self.location[1] + add[1]]
+
+    def get_state(self):
+        raise NotImplementedError("Please Implement the get_state method for all Agents")
+
+    def get_actions(self):
+        raise NotImplementedError("Please Implement the get_state method for all Agents")
+
     def move(self):
         raise NotImplementedError("Please Implement the move method for all Agents")
