@@ -1,7 +1,9 @@
 from random import randrange
+from time import sleep
 
 from EnvironmentSimulator import EnvironmentSimulator
 from visuals.plotter import Plotter
+from visuals.renderer import Renderer
 
 if __name__ == '__main__':
 
@@ -11,6 +13,7 @@ if __name__ == '__main__':
     print('Starting simulation...')
 
     env = EnvironmentSimulator()
+    renderer = Renderer(env)
 
     # Populate the environment
     i = 0
@@ -27,9 +30,9 @@ if __name__ == '__main__':
 
         # Perform random movements/actions
         for hunter in env.hunterModel.agents:
-            hunter.do_action( randrange(0, 4) )
+            hunter.do_action( randrange(0, 5) )
         for prey in env.preyModel.agents:
-            prey.do_action( randrange(0, 3) )
+            prey.do_action( randrange(0, 4) )
 
         # Execute the result of these actions
         for hunter in env.hunterModel.agents:
@@ -46,6 +49,8 @@ if __name__ == '__main__':
 
         env.time += 1
         time += 1
+        renderer.render_state()
+        sleep(1)
 
     print("\nBirth statistics")
     print("Born preys: " + str(env.preys_born))

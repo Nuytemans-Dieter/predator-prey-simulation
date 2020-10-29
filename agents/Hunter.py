@@ -23,7 +23,7 @@ class Hunter(Agent):
             self.doReproduce = True
         else:
             move = self.get_move_from_action( action )
-            self.location = ( self.location[0] + move[0], self.location[1] + move[1] )
+            self.location = self.add_location( move )
 
     def finish_action(self):
 
@@ -54,7 +54,7 @@ class Hunter(Agent):
 
     def move(self):
         move = self.get_random_move()
-        self.location = ( self.location[0] + move[0], self.location[1] + move[1] )
+        self.location = self.add_location( move )
 
         # Look for preys at this location and eat them
         preys = self.environment.get_preys_near(location=self.location, distanceSquared=self.smell_distance)

@@ -15,7 +15,7 @@ class Prey(Agent):
         self.age += 1
 
         move = self.get_move_from_action( action )
-        self.location = ( self.location[0] + move[0], self.location[1] + move[1] )
+        self.location = self.add_location( move )
 
     def finish_action(self):
 
@@ -33,8 +33,7 @@ class Prey(Agent):
     def move(self):
         # Do a random move
         move = self.get_random_move()
-        self.location = ( self.location[0] + move[0],
-                          self.location[1] + move[1] )
+        self.location = self.add_location( move )
 
         # Check reproduction -> spawn new
         chance = randrange(0, 101)

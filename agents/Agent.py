@@ -48,7 +48,16 @@ class Agent:
         return move
 
     def add_location(self, add):
-        return self.location[0] + add[0], self.location[1] + add[1]
+        x = self.location[0] + add[0]
+        y = self.location[1] + add[1]
+
+        x = max(x, 0)
+        x = min(x, self.environment.size_x - 1)
+
+        y = max(y, 0)
+        y = min(y, self.environment.size_y - 1)
+
+        return x, y
 
     def do_action(self, action):
         raise NotImplementedError("Please Implement the do_action method for all Agents")
