@@ -32,14 +32,32 @@ class Agent:
 
         return move
 
+    def get_move_from_action(self, direction):
+        """Get the movement for a specific direction. 0: up, 1: down, 2: left, 3: right, other: nothing [0, 0]"""
+        if direction == 0:
+            move = [0, 1]
+        elif direction == 1:
+            move = [0, -1]
+        elif direction == 2:
+            move = [-1, 0]
+        elif direction == 3:
+            move = [1, 0]
+        else:
+            move = [0, 0]
+
+        return move
+
     def add_location(self, add):
-        return [self.location[0] + add[0], self.location[1] + add[1]]
+        return self.location[0] + add[0], self.location[1] + add[1]
+
+    def do_action(self, action):
+        raise NotImplementedError("Please Implement the do_action method for all Agents")
 
     def get_state(self):
         raise NotImplementedError("Please Implement the get_state method for all Agents")
 
     def get_actions(self):
-        raise NotImplementedError("Please Implement the get_state method for all Agents")
+        raise NotImplementedError("Please Implement the get_actions method for all Agents")
 
     def move(self):
         raise NotImplementedError("Please Implement the move method for all Agents")

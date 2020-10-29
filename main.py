@@ -1,3 +1,5 @@
+from random import randrange
+
 from EnvironmentSimulator import EnvironmentSimulator
 from visuals.plotter import Plotter
 
@@ -9,6 +11,8 @@ if __name__ == '__main__':
     print('Starting simulation...')
 
     env = EnvironmentSimulator()
+
+    # Populate the environment
     i = 0
     while i < max(start_num_hunters, start_num_preys):
         if i < start_num_hunters:
@@ -17,10 +21,31 @@ if __name__ == '__main__':
             env.spawn_prey()
         i += 1
 
-    i = 0
-    while env.get_num_hunters() > 0:
-        env.simulate_step()
-        i += 1
+    time = 0
+    while env.get_num_hunters() > 0 and env.get_num_preys() > 0:
+        # env.simulate_step()
+
+        # Perform random movements/actions
+        for hunter in env.hunterModel.agents:
+            hunter.do_action( randrange(0, 4) )
+        for prey in env.preyModel.agents:
+            prey.do_action( randrange(0, 3) )
+
+        # Execute the result of these actions
+        for hunter in env.hunterModel.agents:
+            hunter.finish_action()
+        for prey in env.preyModel.agents:
+            prey.finish_action()
+
+        # Gather step data
+        env.num_hunter_data.append( env.hunterModel.get_num_agents() )
+        env.num_prey_data.append( env.preyModel.get_num_agents() )
+        print('\nTime step ' + str(env.time) )
+        print('Num preys: ' + str(env.num_prey_data[-1]) )
+        print('Num hunters: ' + str(env.num_hunter_data[-1]) )
+
+        env.time += 1
+        time += 1
 
     print("\nBirth statistics")
     print("Born preys: " + str(env.preys_born))

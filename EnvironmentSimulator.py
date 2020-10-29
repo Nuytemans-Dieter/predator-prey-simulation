@@ -52,25 +52,23 @@ class EnvironmentSimulator:
                 preys.append( prey )
         return preys
 
-    def get_nearest_prey(self, location):
-        """Get the nearest prey to this location. Returns 0 if there are no preys"""
+    def get_nearest_agent(self, location, agents):
+        """Get the nearest agent to this location. Returns 0 if there are no agents"""
         distance = -1
         nearest = 0
-        for prey in self.preyModel.agents:
-            preyDistance = self.get_distance_squared(prey.location, location)
-            if preyDistance < distance or distance == -1:
-                nearest = prey
+        for agent in agents:
+            agentDistance = self.get_distance_squared(agent.location, location)
+            if agentDistance < distance or distance == -1:
+                nearest = agent
         return nearest
+
+    def get_nearest_prey(self, location):
+        """Get the nearest prey to this location. Returns 0 if there are no preys"""
+        return self.get_nearest_agent(location, self.preyModel.agents)
 
     def get_nearest_hunter(self, location):
         """Get the nearest hunter to this location. Returns 0 if there are no preys"""
-        distance = -1
-        nearest = 0
-        for prey in self.hunterModel.agents:
-            preyDistance = self.get_distance_squared(prey.location, location)
-            if preyDistance < distance or distance == -1:
-                nearest = prey
-        return nearest
+        return self.get_nearest_agent(location, self.hunterModel.agents)
 
     def kill_prey(self, prey):
         self.preyModel.agents.remove( prey )
@@ -86,6 +84,9 @@ class EnvironmentSimulator:
 
     def get_num_hunters(self):
         return self.hunterModel.agents.__len__()
+
+    def get_num_preys(self):
+        return self.preyModel.agents.__len__()
 
     def get_distance_squared(self, loc1, loc2):
         return loc1[0] + loc2[0] + loc1[1] + loc2[1]
