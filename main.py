@@ -7,8 +7,8 @@ from visuals.renderer import Renderer
 
 if __name__ == '__main__':
 
-    start_num_hunters = 25
-    start_num_preys = 150
+    start_num_hunters = 20
+    start_num_preys = 200
 
     print('Starting simulation...')
 

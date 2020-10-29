@@ -9,7 +9,7 @@ class HunterModel(Model):
     def __init__(self, environment):
         super().__init__(environment)
         self.max_birth_rate = 100
-        self.max_age = 20
+        self.max_age = 50
 
     def create_agent(self):
         location = (
@@ -19,9 +19,9 @@ class HunterModel(Model):
         # max_age = randrange(0, 51)
         max_age = 30
         # starting_energy = 0
-        starting_energy = 15
+        starting_energy = 10
         # energy_to_reproduce = randrange(0, 101)
-        energy_to_reproduce = 20
+        energy_to_reproduce = 100
         # energy_per_prey_eaten = randrange(0, 31)
         energy_per_prey_eaten = 30
         hunter = Hunter(
