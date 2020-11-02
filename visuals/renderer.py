@@ -3,8 +3,8 @@ from pygame import Color
 
 class Renderer:
 
-    FILL_SIZE = 17
-    SQUARE_SIZE = 20
+    FILL_SIZE = 8
+    SQUARE_SIZE = 10
     BORDER = 30
     OFFSET = (SQUARE_SIZE - FILL_SIZE) / 2
 

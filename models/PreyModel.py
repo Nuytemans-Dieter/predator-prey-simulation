@@ -17,7 +17,7 @@ class PreyModel(Model):
         # max_age = randrange(0, 51)
         max_age = 20
         # birth_rate = randrange(0, 101)
-        birth_rate = 5
+        birth_rate = 1
         prey = Prey(
             self.environment,
             location,

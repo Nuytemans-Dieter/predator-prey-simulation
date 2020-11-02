@@ -19,9 +19,9 @@ class HunterModel(Model):
         # max_age = randrange(0, 51)
         max_age = 30
         # starting_energy = 0
-        starting_energy = 10
+        starting_energy = 30
         # energy_to_reproduce = randrange(0, 101)
-        energy_to_reproduce = 100
+        energy_to_reproduce = 30
         # energy_per_prey_eaten = randrange(0, 31)
         energy_per_prey_eaten = 30
         hunter = Hunter(

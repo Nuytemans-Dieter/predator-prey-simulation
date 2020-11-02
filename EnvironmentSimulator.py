@@ -4,8 +4,8 @@ from models.PreyModel import PreyModel
 
 class EnvironmentSimulator:
 
-    size_x = 100
-    size_y = 100
+    size_x = 20
+    size_y = 20
 
     time = 0
 
