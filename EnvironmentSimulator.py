@@ -4,6 +4,7 @@ from models.PreyModel import PreyModel
 
 class EnvironmentSimulator:
 
+    print('Michiel was here!')
     size_x = 20
     size_y = 20
 
