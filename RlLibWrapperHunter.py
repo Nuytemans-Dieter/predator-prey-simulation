@@ -3,6 +3,8 @@ from random import randrange
 import gym as gym
 import datetime
 
+from ray.tune import register_env
+
 from EnvironmentSimulator import EnvironmentSimulator
 from visuals.renderer import Renderer
 
@@ -67,7 +69,7 @@ class RlLibWrapperPrey(gym.Env):
 
         num_agents_before = hunters.__len__()
         num_agents_after = self.simulator.hunterModel.agents.__len__()
-        reward = self.simulator.hunterModel.calculate_reward( num_agents_before, num_agents_after, 1.2 )
+        reward = self.simulator.hunterModel.calculate_reward(num_agents_before, num_agents_after, 1.2)
 
         end = datetime.datetime.now()
         delta = (end - start).seconds
@@ -85,3 +87,10 @@ class RlLibWrapperPrey(gym.Env):
                         self.simulator.hunterModel.agents.__len__() == 0
             })
         return obs
+
+
+def env_creator(config):
+    return RlLibWrapperPrey(config)
+
+
+register_env("predator-prey", env_creator)

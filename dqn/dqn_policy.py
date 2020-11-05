@@ -42,7 +42,7 @@ class DQNPolicy(Policy):
         self.policy_net = ModelCatalog.get_model_v2(
             obs_space=self.observation_space,
             action_space=self.action_space,
-            num_outputs=2,
+            num_outputs=4,
             name="DQNModel",
             model_config=self.config["dqn_model"],
             framework="torch",
@@ -52,7 +52,7 @@ class DQNPolicy(Policy):
         self.target_net = ModelCatalog.get_model_v2(
             obs_space=self.observation_space,
             action_space=self.action_space,
-            num_outputs=2,
+            num_outputs=4,
             name="DQNModel",
             model_config=self.config["dqn_model"],
 

@@ -1,3 +1,5 @@
+import json
+
 import ray
 from ray import tune
 from ray.rllib.models import ModelCatalog
@@ -5,6 +7,11 @@ from ray.rllib.models import ModelCatalog
 from dqn import DQNTrainer, DQNModel
 
 if __name__ == "__main__":
+
+    # Read configuration file.
+    with open('config.JSON') as config_file:
+        config = json.load(config_file)
+
     ray.init()
     # Register a custom model that can later be used in the model config.
     ModelCatalog.register_custom_model("DQNModel", DQNModel)
@@ -15,15 +22,16 @@ if __name__ == "__main__":
         #checkpoint_freq=10,
         checkpoint_at_end=True,
         # Do a total of 1000 episodes.
-        stop={"episodes_total": 500000},
+        stop={"episodes_total": 1000},
         config={
+            "env": "predator_prey",
+            "env_config": config,
             "num_gpus": 0,
             "num_workers": 2,
             "framework": "torch",
             # How many steps back the return will be determined.
             "rollout_fragment_length": 20,
             # The environment we'll be working in.
-            "env": "CartPole-v1",
             "train_batch_size": 2000,
 
             ########################################
