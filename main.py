@@ -1,6 +1,9 @@
 from random import randrange
 from time import sleep
 
+import gym
+import gym_predatorprey
+
 from EnvironmentSimulator import EnvironmentSimulator
 from visuals.plotter import Plotter
 from visuals.renderer import Renderer
@@ -21,6 +24,8 @@ if __name__ == '__main__':
 
     env = EnvironmentSimulator(config)
     renderer = Renderer(env, config)
+
+    test = gym.make('predator-v0', config=config)
 
     # Populate the environment
     i = 0

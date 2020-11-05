@@ -93,7 +93,7 @@ class RlLibWrapperHunter(gym.Env):
 
 
 def env_creator(config):
-    return RlLibWrapperPrey(config)
+    return RlLibWrapperHunter(config)
 
 
 register_env("predator-v0", env_creator)
