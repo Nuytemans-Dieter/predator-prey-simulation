@@ -1,4 +1,9 @@
 {
   "start_num_hunters":  20,
-  "start_num_preys":    200
+  "start_num_preys":    200,
+  "size_x":             20,
+  "size_y":             20,
+  "fill_size":          8,
+  "square_size":        10,
+  "border":             30
 }

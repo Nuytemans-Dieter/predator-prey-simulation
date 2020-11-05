@@ -13,15 +13,14 @@ if __name__ == '__main__':
     with open('config.JSON') as config_file:
         config = json.load(config_file)
 
-    print(config['start_num_hunters'])
     # Read configuration parameters.
     start_num_hunters = config['start_num_hunters']
     start_num_preys = config['start_num_preys']
 
     print('Starting simulation...')
 
-    env = EnvironmentSimulator()
-    renderer = Renderer(env)
+    env = EnvironmentSimulator(config)
+    renderer = Renderer(env, config)
 
     # Populate the environment
     i = 0

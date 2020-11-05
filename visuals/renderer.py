@@ -1,12 +1,8 @@
 import pygame
 from pygame import Color
 
-class Renderer:
 
-    FILL_SIZE = 8
-    SQUARE_SIZE = 10
-    BORDER = 30
-    OFFSET = (SQUARE_SIZE - FILL_SIZE) / 2
+class Renderer:
 
     background = Color(100, 100, 100)
     empty = Color(150, 150, 150)
@@ -15,18 +11,25 @@ class Renderer:
 
     pygame.display.set_caption('PreyVSPredator')
 
-    def __init__(self, environment):
+    def __init__(self, environment, config):
+        # Read configuration parameters.
+        self.fill_size = config['fill_size']
+        self.square_size = config['square_size']
+        self.border = config['border']
+        self.offset = (self.square_size - self.fill_size) / 2
+
         self.env = environment
-        self.screen_size = (self.SQUARE_SIZE * (self.env.size_x) + 2*self.BORDER, self.SQUARE_SIZE * (self.env.size_y) + 2*self.BORDER )
-        self.screen = pygame.display.set_mode( self.screen_size )
+        self.screen_size = (
+            self.square_size * self.env.size_x + 2 * self.border, self.square_size * self.env.size_y + 2 * self.border)
+        self.screen = pygame.display.set_mode(self.screen_size)
         pygame.init()
 
     def render_state(self):
         # Fill the background
-        self.screen.fill( self.background )
+        self.screen.fill(self.background)
 
-        for x in range( self.env.size_x ):
-            for y in range (self.env.size_y ):
+        for x in range(self.env.size_x):
+            for y in range(self.env.size_y):
                 self.draw_square(x, y, self.empty)
 
         for prey in self.env.preyModel.agents:
@@ -38,5 +41,6 @@ class Renderer:
         pygame.display.update()
 
     def draw_square(self, x, y, color):
-        square = pygame.Rect(x * self.SQUARE_SIZE + self.OFFSET + self.BORDER, y * self.SQUARE_SIZE + self.OFFSET + self.BORDER, self.FILL_SIZE, self.FILL_SIZE)
+        square = pygame.Rect(x * self.square_size + self.offset + self.border,
+                             y * self.square_size + self.offset + self.border, self.fill_size, self.fill_size)
         pygame.draw.rect(self.screen, color, square)

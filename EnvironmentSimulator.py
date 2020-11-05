@@ -3,13 +3,9 @@ from models.PreyModel import PreyModel
 
 
 class EnvironmentSimulator:
-
-    size_x = 20
-    size_y = 20
-
     time = 0
 
-     # Statistics
+    # Statistics
     num_hunter_data = []
     num_prey_data = []
 
@@ -21,7 +17,12 @@ class EnvironmentSimulator:
     prey_deaths_by_eaten = 0
     prey_deaths_by_age = 0
 
-    def __init__(self):
+    def __init__(self, config):
+        # Configuration parameters.
+        self.size_x = config['size_x']
+        self.size_y = config['size_y']
+
+        # Models.
         self.preyModel = PreyModel(self)
         self.hunterModel = HunterModel(self)
 
@@ -37,19 +38,18 @@ class EnvironmentSimulator:
                 prey.age += 1
                 prey.move()
 
-        self.num_hunter_data.append( self.hunterModel.get_num_agents() )
-        self.num_prey_data.append( self.preyModel.get_num_agents() )
-        print('\nTime step ' + str(self.time) )
-        print('Num preys: ' + str(self.num_prey_data[-1]) )
-        print('Num hunters: ' + str(self.num_hunter_data[-1]) )
+        self.num_hunter_data.append(self.hunterModel.get_num_agents())
+        self.num_prey_data.append(self.preyModel.get_num_agents())
+        print('\nTime step ' + str(self.time))
+        print('Num preys: ' + str(self.num_prey_data[-1]))
+        print('Num hunters: ' + str(self.num_hunter_data[-1]))
         self.time += 1
 
-
-    def get_preys_near(self, location, distanceSquared):
+    def get_preys_near(self, location, distance_squared):
         preys = []
         for prey in self.preyModel.agents:
-            if self.get_distance_squared( prey.location, location ) <= distanceSquared:
-                preys.append( prey )
+            if self.get_distance_squared(prey.location, location) <= distance_squared:
+                preys.append(prey)
         return preys
 
     def get_nearest_agent(self, location, agents):
@@ -57,8 +57,8 @@ class EnvironmentSimulator:
         distance = -1
         nearest = 0
         for agent in agents:
-            agentDistance = self.get_distance_squared(agent.location, location)
-            if agentDistance < distance or distance == -1:
+            agent_distance = self.get_distance_squared(agent.location, location)
+            if agent_distance < distance or distance == -1:
                 nearest = agent
         return nearest
 
@@ -71,10 +71,10 @@ class EnvironmentSimulator:
         return self.get_nearest_agent(location, self.hunterModel.agents)
 
     def kill_prey(self, prey):
-        self.preyModel.agents.remove( prey )
+        self.preyModel.agents.remove(prey)
 
     def kill_hunter(self, hunter):
-        self.hunterModel.agents.remove( hunter )
+        self.hunterModel.agents.remove(hunter)
 
     def spawn_prey(self):
         self.preyModel.create_agent()
