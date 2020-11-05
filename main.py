@@ -11,6 +11,7 @@ if __name__ == '__main__':
     start_num_preys = 200
 
     print('Starting simulation...')
+    print('Michiel was here!')
 
     env = EnvironmentSimulator()
     renderer = Renderer(env)
