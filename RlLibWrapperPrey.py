@@ -12,8 +12,8 @@ class RlLibWrapperPrey(gym.Env):
         self.config = config
         self.simulator = EnvironmentSimulator(config)
 
-        start_num_hunters = 25
-        start_num_preys = 150
+        start_num_hunters = config['start_num_hunters']
+        start_num_preys = config['start_num_preys']
 
         # Populate the environment
         i = 0
@@ -34,7 +34,7 @@ class RlLibWrapperPrey(gym.Env):
 
         preys = []
 
-        # TODO get a move for everyone first
+        # TODO get an action for all preys first
 
         # Perform random movements/actions
         for hunter in self.simulator.hunterModel.agents:
@@ -69,6 +69,8 @@ class RlLibWrapperPrey(gym.Env):
             obs.append({
                 "obs": prey.get_state(),
                 "reward": reward,
-                "done": not self.simulator.preyModel.agents.__contains__(prey)
+                "done": not self.simulator.preyModel.agents.count(prey) > 0
             })
+
+        print(obs)
         return obs
