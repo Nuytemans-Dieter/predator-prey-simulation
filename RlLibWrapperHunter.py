@@ -9,8 +9,9 @@ from visuals.renderer import Renderer
 class RlLibWrapperPrey(gym.Env):
 
 
-    def __init__(self):
-        self.simulator = EnvironmentSimulator()
+    def __init__(self, config):
+        self.config = config
+        self.simulator = EnvironmentSimulator(config)
 
         start_num_hunters = 25
         start_num_preys = 150
@@ -25,10 +26,10 @@ class RlLibWrapperPrey(gym.Env):
             i += 1
 
         print('Starting simulation...')
-        self.renderer = Renderer(self.simulator)
+        self.renderer = Renderer(self.simulator, config)
 
     def reset(self):
-        self.simulator = EnvironmentSimulator()
+        self.simulator = EnvironmentSimulator(self.config)
 
     def step(self, action):
 

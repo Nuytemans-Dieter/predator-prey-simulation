@@ -8,9 +8,9 @@ from visuals.renderer import Renderer
 
 class RlLibWrapperPrey(gym.Env):
 
-
-    def __init__(self):
-        self.simulator = EnvironmentSimulator()
+    def __init__(self, config):
+        self.config = config
+        self.simulator = EnvironmentSimulator(config)
 
         start_num_hunters = 25
         start_num_preys = 150
@@ -25,10 +25,10 @@ class RlLibWrapperPrey(gym.Env):
             i += 1
 
         print('Starting simulation...')
-        self.renderer = Renderer(self.simulator)
+        self.renderer = Renderer(self.simulator, self.config)
 
     def reset(self):
-        self.simulator = EnvironmentSimulator()
+        self.simulator = EnvironmentSimulator(self.config)
 
     def step(self, action):
 
@@ -38,11 +38,11 @@ class RlLibWrapperPrey(gym.Env):
 
         # Perform random movements/actions
         for hunter in self.simulator.hunterModel.agents:
-            hunter.do_action( randrange(0, 5) )
+            hunter.do_action(randrange(0, 5))
         for prey in self.simulator.preyModel.agents:
             # TODO get agent action
-            prey.do_action( randrange(0, 4) )
-            preys.append( prey )
+            prey.do_action(randrange(0, 4))
+            preys.append(prey)
 
         # Execute the result of these actions
         for hunter in self.simulator.hunterModel.agents:
@@ -51,11 +51,11 @@ class RlLibWrapperPrey(gym.Env):
             prey.finish_action()
 
         # Gather step data
-        self.simulator.num_hunter_data.append( self.simulator.hunterModel.get_num_agents() )
-        self.simulator.num_prey_data.append( self.simulator.preyModel.get_num_agents() )
-        print('\nTime step ' + str(self.simulator.time) )
-        print('Num preys: ' + str(self.simulator.num_prey_data[-1]) )
-        print('Num hunters: ' + str(self.simulator.num_hunter_data[-1]) )
+        self.simulator.num_hunter_data.append(self.simulator.hunterModel.get_num_agents())
+        self.simulator.num_prey_data.append(self.simulator.preyModel.get_num_agents())
+        print('\nTime step ' + str(self.simulator.time))
+        print('Num preys: ' + str(self.simulator.num_prey_data[-1]))
+        print('Num hunters: ' + str(self.simulator.num_hunter_data[-1]))
 
         self.simulator.time += 1
         self.renderer.render_state()
@@ -69,6 +69,6 @@ class RlLibWrapperPrey(gym.Env):
             obs.append({
                 "obs": prey.get_state(),
                 "reward": reward,
-                "done": not self.simulator.preyModel.agents.__contains__( prey )
+                "done": not self.simulator.preyModel.agents.__contains__(prey)
             })
         return obs
