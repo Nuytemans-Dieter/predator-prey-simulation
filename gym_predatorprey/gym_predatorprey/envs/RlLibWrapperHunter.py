@@ -1,14 +1,15 @@
-import datetime
 from random import randrange
 
 import gym as gym
+import datetime
+
 from ray.tune import register_env
 
 from EnvironmentSimulator import EnvironmentSimulator
 from visuals.renderer import Renderer
 
 
-class RlLibWrapperPrey(gym.Env):
+class RlLibWrapperHunter(gym.Env):
 
     def __init__(self, config):
         self.config = config
@@ -29,28 +30,26 @@ class RlLibWrapperPrey(gym.Env):
             i += 1
 
         print('Starting simulation...')
-        self.renderer = Renderer(self.simulator, self.config)
+        self.renderer = Renderer(self.simulator, config)
 
     def reset(self):
         self.simulator = EnvironmentSimulator(self.config)
 
     def step(self, action):
 
-        print(action)
-
         start = datetime.datetime.now()
 
-        preys = []
+        hunters = []
 
-        # TODO get an action for all preys first
+        # TODO get an action for all hunters first
 
         # Perform random movements/actions
         for hunter in self.simulator.hunterModel.agents:
-            hunter.do_action(randrange(0, 5))
-        for prey in self.simulator.preyModel.agents:
             # TODO get agent action
+            hunter.do_action(randrange(0, 5))
+            hunters.append(hunter)
+        for prey in self.simulator.preyModel.agents:
             prey.do_action(randrange(0, 4))
-            preys.append(prey)
 
         # Execute the result of these actions
         for hunter in self.simulator.hunterModel.agents:
@@ -68,27 +67,29 @@ class RlLibWrapperPrey(gym.Env):
         self.simulator.time += 1
         self.renderer.render_state()
 
-        num_agents_before = preys.__len__()
-        num_agents_after = self.simulator.preyModel.agents.__len__()
-        reward = self.simulator.preyModel.calculate_reward(num_agents_before, num_agents_after, 1.2)
+        num_agents_before = hunters.__len__()
+        num_agents_after = self.simulator.hunterModel.agents.__len__()
+        reward = self.simulator.hunterModel.calculate_reward(num_agents_before, num_agents_after, 1.2)
 
         end = datetime.datetime.now()
         delta = (end - start).seconds
         timeout = delta >= self.time_limit
 
         obs = []
-        for prey in preys:
+        for hunter in hunters:
             # TODO Momenteel random stap, moet aangepast worden
             obs.append({
-                "obs": prey.get_state(),
+                "obs": hunter.get_state(),
                 "reward": reward,
                 "done": timeout or
-                        (not self.simulator.preyModel.agents.count(prey) > 0) or
+                        (not self.simulator.preyModel.agents.count(hunter) > 0) or
                         self.simulator.preyModel.agents.__len__() == 0 or
                         self.simulator.hunterModel.agents.__len__() == 0
             })
-
         return obs
+
+    def render(self, mode='human', close=False):
+      return 0
 
 
 def env_creator(config):
