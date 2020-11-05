@@ -23,8 +23,8 @@ class EnvironmentSimulator:
         self.size_y = config['size_y']
 
         # Models.
-        self.preyModel = PreyModel(self)
-        self.hunterModel = HunterModel(self)
+        self.preyModel = PreyModel(self, config)
+        self.hunterModel = HunterModel(self, config)
 
     def simulate_step(self, do_hunters=1, do_preys=1):
         if do_hunters:

@@ -1,9 +1,15 @@
 {
-  "start_num_hunters":  20,
-  "start_num_preys":    200,
-  "size_x":             20,
-  "size_y":             20,
-  "fill_size":          8,
-  "square_size":        10,
-  "border":             30
+  "start_num_hunters":      20,
+  "start_num_preys":        200,
+  "size_x":                 20,
+  "size_y":                 20,
+  "fill_size":              8,
+  "square_size":            10,
+  "border":                 30,
+  "max_age_prey":           20,
+  "birth_rate_prey":        1,
+  "max_age_hunter":         30,
+  "starting_energy":        20,
+  "energy_to_reproduce":    30,
+  "energy_per_prey_eaten":  30
 }

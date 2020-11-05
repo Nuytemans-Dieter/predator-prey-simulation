@@ -1,8 +1,9 @@
 class Model:
 
-    def __init__(self, environment):
+    def __init__(self, environment, config):
         self.environment = environment
         self.agents = []
+        self.config = config
 
     def get_num_agents(self):
         return len( self.agents )
