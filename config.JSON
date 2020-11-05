@@ -11,5 +11,6 @@
   "max_age_hunter":         30,
   "starting_energy":        20,
   "energy_to_reproduce":    30,
-  "energy_per_prey_eaten":  30
+  "energy_per_prey_eaten":  30,
+  "step_limit_time":        10
 }
