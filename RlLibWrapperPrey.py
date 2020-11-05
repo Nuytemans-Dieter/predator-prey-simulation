@@ -63,8 +63,9 @@ class RlLibWrapperPrey(gym.Env):
         self.simulator.time += 1
         self.renderer.render_state()
 
-        # TODO Reward moet nog verder over nagedacht worden
-        reward = preys.__len__()
+        num_agents_before = preys.__len__()
+        num_agents_after = self.simulator.preyModel.agents.__len__()
+        reward = self.simulator.preyModel.calculate_reward( num_agents_before, num_agents_after, 1.2 )
 
         end = datetime.datetime.now()
         delta = (end - start).seconds

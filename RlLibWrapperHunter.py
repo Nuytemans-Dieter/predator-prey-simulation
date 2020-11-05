@@ -65,19 +65,9 @@ class RlLibWrapperPrey(gym.Env):
         self.simulator.time += 1
         self.renderer.render_state()
 
-        # TODO Reward moet nog verder over nagedacht worden
-        reward = self.simulator.hunterModel.agents.__len__()
-        reward = self.simulator.hunterModel.agents.__len__()**(1.2)
-        difference = self.simulator.hunterModel.agents.__len__() - hunters.__len__()
-        # Difference > 0: more agents now than at the start -> Good
-        # Difference = 0: equal amount -> Meh
-        # Difference < 0: less agents now than at the start -> Bad
-        difference_altered = difference**(1.2)
-        do_flip_sign = difference < 0
-        if do_flip_sign:
-            difference_altered = -difference_altered
-
-
+        num_agents_before = hunters.__len__()
+        num_agents_after = self.simulator.hunterModel.agents.__len__()
+        reward = self.simulator.hunterModel.calculate_reward( num_agents_before, num_agents_after, 1.2 )
 
         end = datetime.datetime.now()
         delta = (end - start).seconds
