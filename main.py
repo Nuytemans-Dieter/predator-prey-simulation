@@ -5,13 +5,20 @@ from EnvironmentSimulator import EnvironmentSimulator
 from visuals.plotter import Plotter
 from visuals.renderer import Renderer
 
+import json
+
 if __name__ == '__main__':
 
-    start_num_hunters = 20
-    start_num_preys = 200
+    # Read configuration file.
+    with open('config.JSON') as config_file:
+        config = json.load(config_file)
+
+    print(config['start_num_hunters'])
+    # Read configuration parameters.
+    start_num_hunters = config['start_num_hunters']
+    start_num_preys = config['start_num_preys']
 
     print('Starting simulation...')
-    print('Michiel was here!')
 
     env = EnvironmentSimulator()
     renderer = Renderer(env)
