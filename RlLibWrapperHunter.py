@@ -13,8 +13,8 @@ class RlLibWrapperPrey(gym.Env):
         self.config = config
         self.simulator = EnvironmentSimulator(config)
 
-        start_num_hunters = 25
-        start_num_preys = 150
+        start_num_hunters = config['start_num_hunters']
+        start_num_preys = config['start_num_preys']
 
         # Populate the environment
         i = 0
@@ -35,7 +35,7 @@ class RlLibWrapperPrey(gym.Env):
 
         hunters = []
 
-        # TODO get a move for everyone first
+        # TODO get an action for all hunters first
 
         # Perform random movements/actions
         for hunter in self.simulator.hunterModel.agents:
@@ -70,34 +70,8 @@ class RlLibWrapperPrey(gym.Env):
             obs.append({
                 "obs": hunter.get_state(),
                 "reward": reward,
-                "done": not self.simulator.hunterModel.agents.__contains__( hunter )
+                "done": (not self.simulator.preyModel.agents.count(hunter) > 0) or
+                        self.simulator.preyModel.agents.__len__() == 0 or
+                        self.simulator.hunterModel.agents.__len__() == 0
             })
         return obs
-
-
-
-
-
-
-
-
-
-        # env.simulate_step()
-
-
-
-
-
-    print("\nBirth statistics")
-    print("Born preys: " + str(env.preys_born))
-    print("Born hunters: " + str(env.hunters_born))
-
-    print("\nPrey deaths")
-    print("By age: " + str(env.prey_deaths_by_age))
-    print("By eaten: " + str(env.prey_deaths_by_eaten))
-    print("Hunter deaths")
-    print("By age: " + str(env.hunter_deaths_by_age))
-    print("By energy: " + str(env.hunter_deaths_by_energy))
-
-    plotter = Plotter()
-    plotter.drawPlot(env.num_prey_data, env.num_hunter_data)

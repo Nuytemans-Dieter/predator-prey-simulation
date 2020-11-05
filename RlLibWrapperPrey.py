@@ -69,7 +69,9 @@ class RlLibWrapperPrey(gym.Env):
             obs.append({
                 "obs": prey.get_state(),
                 "reward": reward,
-                "done": not self.simulator.preyModel.agents.count(prey) > 0
+                "done": (not self.simulator.preyModel.agents.count(prey) > 0) or
+                        self.simulator.preyModel.agents.__len__() == 0 or
+                        self.simulator.hunterModel.agents.__len__() == 0
             })
 
         print(obs)
