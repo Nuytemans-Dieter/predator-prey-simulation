@@ -16,6 +16,8 @@ class RlLibWrapperPrey(gym.Env):
         start_num_hunters = config['start_num_hunters']
         start_num_preys = config['start_num_preys']
 
+        self.time_limit = config['step_limit_time']
+
         # Populate the environment
         i = 0
         while i < max(start_num_hunters, start_num_preys):
