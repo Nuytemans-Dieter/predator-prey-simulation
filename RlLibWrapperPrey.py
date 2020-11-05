@@ -1,3 +1,4 @@
+import datetime
 from random import randrange
 
 import gym as gym
@@ -32,6 +33,8 @@ class RlLibWrapperPrey(gym.Env):
 
     def step(self, action):
 
+        start = datetime.datetime.now()
+
         preys = []
 
         # TODO get an action for all preys first
@@ -63,16 +66,20 @@ class RlLibWrapperPrey(gym.Env):
         # TODO Reward moet nog verder over nagedacht worden
         reward = preys.__len__()
 
+        end = datetime.datetime.now()
+        delta = (end - start).seconds
+        timeout = delta >= self.time_limit
+
         obs = []
         for prey in preys:
             # TODO Momenteel random stap, moet aangepast worden
             obs.append({
                 "obs": prey.get_state(),
                 "reward": reward,
-                "done": (not self.simulator.preyModel.agents.count(prey) > 0) or
+                "done": timeout or
+                        (not self.simulator.preyModel.agents.count(prey) > 0) or
                         self.simulator.preyModel.agents.__len__() == 0 or
                         self.simulator.hunterModel.agents.__len__() == 0
             })
 
-        print(obs)
         return obs
