@@ -93,4 +93,4 @@ def env_creator(config):
     return RlLibWrapperPrey(config)
 
 
-register_env("predator-prey", env_creator)
+register_env("predator-v0", env_creator)
