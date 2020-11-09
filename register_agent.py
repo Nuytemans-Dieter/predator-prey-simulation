@@ -1,5 +1,3 @@
-import json
-
 from ray.tune import register_env
 
 
@@ -7,7 +5,7 @@ def env_creator(name, config):
     if name == "predator-v0":
         from gym_predatorprey.envs.RlLibWrapperHunter import RlLibWrapperHunter as Env
     elif name == "prey-v0":
-        from gym_predatorprey.envs.RlLibWrapperPrey import RlLibWrapperPrey as Env
+        from gym_prey.gym_prey import RlLibWrapperPrey as Env
     else:
         raise NotImplementedError
     return Env(config)

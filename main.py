@@ -3,6 +3,7 @@ from time import sleep
 
 import gym
 import gym_predatorprey
+import gym_prey
 
 from EnvironmentSimulator import EnvironmentSimulator
 from visuals.plotter import Plotter
@@ -25,7 +26,7 @@ if __name__ == '__main__':
     env = EnvironmentSimulator(config)
     renderer = Renderer(env, config)
 
-    test = gym.make('predator-v0', config=config)
+    test = gym.make('prey-v0', config=config)
 
     # Populate the environment
     i = 0
