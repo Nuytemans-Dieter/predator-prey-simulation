@@ -1,3 +1,4 @@
+import json
 from random import randrange
 
 import gym as gym
@@ -29,7 +30,7 @@ class RlLibWrapperHunter(gym.Env):
                 self.simulator.spawn_prey()
             i += 1
 
-        print('Starting simulation...')
+        print('Starting hunter simulation...')
         self.renderer = Renderer(self.simulator, config)
 
     def reset(self):
@@ -90,10 +91,3 @@ class RlLibWrapperHunter(gym.Env):
 
     def render(self, mode='human', close=False):
       return 0
-
-
-def env_creator(config):
-    return RlLibWrapperHunter(config)
-
-
-register_env("predator-v0", env_creator)
