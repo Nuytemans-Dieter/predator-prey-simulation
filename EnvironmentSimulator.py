@@ -54,6 +54,7 @@ class EnvironmentSimulator:
 
     def get_nearest_agent(self, location, agents):
         """Get the nearest agent to this location. Returns 0 if there are no agents"""
+        # TODO Negative must be possible too
         distance = -1
         nearest = 0
         for agent in agents:
