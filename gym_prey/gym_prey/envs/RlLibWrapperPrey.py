@@ -21,7 +21,6 @@ class RlLibWrapperPrey(gym.Env):
             gym.spaces.Box(low=-config['size_x'], high=config['size_x'],       shape=(1,), dtype=int),
             gym.spaces.Box(low=-config['size_y'], high=config['size_y'],       shape=(1,), dtype=int)
         ))
-        self.reward_range = gym.spaces.Box(low=-float(inf), high=float(inf), shape=(1,), dtype=float)
 
         self.config = config
         self.simulator = EnvironmentSimulator(config)
