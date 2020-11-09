@@ -24,8 +24,12 @@ if __name__ == "__main__":
         # Do a total of 1000 episodes.
         stop={"episodes_total": 1000},
         config={
-            "env": "predator-v0",
-            "env_config": config,
+            # "env": "gym_predatorprey:predator-v0",
+            "env": "gym_prey:prey-v0",
+            "env_config":
+                {
+                  "config": config
+                },
             "num_gpus": 0,
             "num_workers": 2,
             "framework": "torch",

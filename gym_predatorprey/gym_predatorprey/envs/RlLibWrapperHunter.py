@@ -13,6 +13,7 @@ from visuals.renderer import Renderer
 class RlLibWrapperHunter(gym.Env):
 
     def __init__(self, config):
+
         self.config = config
         self.simulator = EnvironmentSimulator(config)
 
