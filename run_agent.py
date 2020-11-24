@@ -36,7 +36,7 @@ if __name__ == "__main__":
             # How many steps back the return will be determined.
             "rollout_fragment_length": 20,
             # The environment we'll be working in.
-            "train_batch_size": 2000,
+            "train_batch_size": 10,
 
             ########################################
             # Parameters Agent

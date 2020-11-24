@@ -1,4 +1,4 @@
-#!/home/dieter/Simulation/venv/bin/python
+#!/home/michiel/PycharmProjects/predator-prey-simulation/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
