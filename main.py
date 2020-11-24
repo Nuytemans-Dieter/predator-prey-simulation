@@ -2,6 +2,7 @@ from random import randrange
 from time import sleep
 
 import gym
+from gym import envs
 import gym_predatorprey
 import gym_prey
 

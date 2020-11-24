@@ -3,7 +3,7 @@ import json
 from random import randrange
 
 import gym as gym
-import numpy
+import numpy as np
 from numpy import inf
 
 from EnvironmentSimulator import EnvironmentSimulator
@@ -16,12 +16,16 @@ class RlLibWrapperPrey(gym.Env):
 
         self.action_space = gym.spaces.Discrete(4)
         # Observation looks like: [age, energy, closestX, closestY]
-        self.observation_space = gym.spaces.Tuple((
-            gym.spaces.Box(low=0,                 high=config['max_age_prey'], shape=(1,), dtype=int),
-            gym.spaces.Box(low=-config['size_x'], high=config['size_x'],       shape=(1,), dtype=int),
-            gym.spaces.Box(low=-config['size_y'], high=config['size_y'],       shape=(1,), dtype=int)
-        ))
-        self.reward_range = gym.spaces.Box(low=-float(inf), high=float(inf), shape=(1,), dtype=float)
+        self.observation_space = gym.spaces.Box(
+            np.array([0, -config['size_x'], -config['size_y']], dtype=np.float32),
+            np.array([config['max_age_prey'], config['size_x'], config['size_y']], dtype=np.float32),
+            dtype=np.float32
+        )
+        # self.observation_space = gym.spaces.Tuple((
+        #     gym.spaces.Box(low=0,                 high=config['max_age_prey'], shape=(1,), dtype=int),
+        #     gym.spaces.Box(low=-config['size_x'], high=config['size_x'],       shape=(1,), dtype=int),
+        #     gym.spaces.Box(low=-config['size_y'], high=config['size_y'],       shape=(1,), dtype=int)
+        # ))
 
         self.config = config
         self.simulator = EnvironmentSimulator(config)
@@ -65,7 +69,7 @@ class RlLibWrapperPrey(gym.Env):
             ))
 
         # TODO return obs instead of this placeholder
-        return numpy.array((4, 4, 2))
+        return np.array((4, 4, 2))
 
     def step(self, action):
         print("PERFORMING A STEP THROUGH RUN AGENT")
@@ -117,16 +121,13 @@ class RlLibWrapperPrey(gym.Env):
             obs.append((
                 prey.get_state(),
                 reward,
-                timeout or
-                        (not self.simulator.preyModel.agents.count(prey) > 0) or
-                        is_group_dead,
-                {}
+                timeout or (not self.simulator.preyModel.agents.count(prey) > 0) or is_group_dead
             ))
 
         if is_group_dead:
             self.reset()
 
-        return numpy.array(obs)
+        return obs
 
     def render(self, mode='human', close=False):
         print("RENDERING THROUGH RUN AGENT")
