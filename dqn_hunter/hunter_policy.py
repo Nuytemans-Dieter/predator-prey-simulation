@@ -14,7 +14,7 @@ import numpy as np
 class HunterPolicy(Policy):
 
     def __init__(self, observation_space, action_space, config):
-        super().__init__(self, observation_space, action_space, config)
+        Policy.__init__(self, observation_space, action_space, config)
         self.observation_space = observation_space
         self.action_space = action_space
         self.config = config
@@ -44,7 +44,7 @@ class HunterPolicy(Policy):
         self.policy_net = ModelCatalog.get_model_v2(
             obs_space=self.observation_space,
             action_space=self.action_space,
-            num_outputs=4,
+            num_outputs=5,
             name="DQNModel",
             model_config=self.config["dqn_model"],
             framework="torch",
@@ -54,7 +54,7 @@ class HunterPolicy(Policy):
         self.target_net = ModelCatalog.get_model_v2(
             obs_space=self.observation_space,
             action_space=self.action_space,
-            num_outputs=4,
+            num_outputs=5,
             name="DQNModel",
             model_config=self.config["dqn_model"],
             framework="torch",
@@ -83,6 +83,8 @@ class HunterPolicy(Policy):
                         strategy=None,
                         **kwargs):
 
+        print("Compute Actions")
+
         obs_batch_t = torch.tensor(obs_batch).type(torch.FloatTensor)
 
         # Get the exploration rate:
@@ -100,6 +102,8 @@ class HunterPolicy(Policy):
         return [action for _ in obs_batch], [], {}
 
     def learn_on_batch(self, samples):
+
+        print("Learn On Batch")
 
         self.iteration += 1
 

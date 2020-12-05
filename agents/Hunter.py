@@ -97,4 +97,4 @@ class Hunter(Agent):
         else:
             closestX = closestLoc.location[0] - self.location[0]
             closestY = closestLoc.location[1] - self.location[1]
-        return [self.age, self.energy, closestX, closestY]
+        return self.age, self.energy, closestX, closestY

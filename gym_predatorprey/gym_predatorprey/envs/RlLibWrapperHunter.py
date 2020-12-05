@@ -6,16 +6,17 @@ from EnvironmentSimulator import EnvironmentSimulator
 import json
 import gym as gym
 import datetime
+import numpy as np
 
 
 class RlLibWrapperHunter(gym.Env):
 
     def __init__(self, config):
         # Actions: Up, down, left, right, reproduce.
-        self.action_space = gym.spaces.Discrete(4)
+        self.action_space = gym.spaces.Discrete(5)
         # Observation looks like: [age, energy, closestX, closestY]
         self.observation_space = gym.spaces.Box(
-            np.array([0, -config['size_x'], 0, -config['size_y']], dtype=np.float32),
+            np.array([0, 0, -config['size_x'], -config['size_y']], dtype=np.float32),
             np.array([config['max_age_hunter'], 1000, config['size_x'], config['size_y']], dtype=np.float32),
             dtype=np.float32
         )
@@ -29,18 +30,18 @@ class RlLibWrapperHunter(gym.Env):
         self.simulator = EnvironmentSimulator(config)
 
         # Number of hunters and preys.
-        start_num_hunters = config['start_num_hunters']
-        start_num_preys = config['start_num_preys']
+        self.start_num_hunters = config['start_num_hunters']
+        self.start_num_preys = config['start_num_preys']
 
         # The maximum amount of time for one timestep.
         self.time_limit = config['step_limit_time']
 
         # Populate the environment.
         i = 0
-        while i < max(start_num_hunters, start_num_preys):
-            if i < start_num_hunters:
+        while i < max(self.start_num_hunters, self.start_num_preys):
+            if i < self.start_num_hunters:
                 self.simulator.spawn_hunter()
-            if i < start_num_preys:
+            if i < self.start_num_preys:
                 self.simulator.spawn_prey()
             i += 1
 
@@ -64,17 +65,27 @@ class RlLibWrapperHunter(gym.Env):
         for hunter in self.simulator.hunterModel.agents:
             obs.append((
                 hunter.get_state(),
-                reward,
                         (not self.simulator.hunterModel.agents.count(prey) > 0) or
                         is_group_dead,
                 {}
             ))
 
         # TODO return obs instead of this placeholder.
-        return np.array((4, 4, 2))
+        return np.array((4, 4, 2, 2))
 
     def step(self, action):
         print("PERFORMING A STEP THROUGH RUN AGENT")
+
+        observation, reward, done, reproduce = {}, {}, {}, {}
+
+        # Populate the environment.
+        i = 0
+        while i < max(self.start_num_hunters, self.start_num_preys):
+            if i < self.start_num_hunters:
+                self.simulator.spawn_hunter()
+            if i < self.start_num_preys:
+                self.simulator.spawn_prey()
+            i += 1
 
         # Starting time.
         start = datetime.datetime.now()
@@ -114,7 +125,7 @@ class RlLibWrapperHunter(gym.Env):
         # Next timestep in simulator.
         self.simulator.time += 1
         # Render state of environment.
-        self.renderer.render_state()
+        # self.renderer.render_state()
 
         # Calculate joint reward.
         num_agents_before = hunters.__len__()
@@ -131,18 +142,22 @@ class RlLibWrapperHunter(gym.Env):
         is_group_dead = self.simulator.preyModel.agents.__len__() == 0 or self.simulator.hunterModel.agents.__len__() == 0
 
         obs = []
+        i = 0
         for hunter in hunters:
             # TODO Currently the agents execute a random action. This needs to be the specified action.
-            obs.append((
-                hunter.get_state(),
-                reward,
-                timeout or (not self.simulator.hunterModel.agents.count(prey) > 0) or is_group_dead
-            ))
-
+            observation[i] = np.array(hunter.get_state())
+            done[i] = bool(
+                        timeout or \
+                      (not self.simulator.hunterModel.agents.count(prey) > 0) or \
+                      is_group_dead
+                    )
+            i = i + 1
         if is_group_dead:
             self.reset()
 
-        return obs
+        print(observation)
+
+        return [observation, reward, done, {}]
 
     def render(self, mode='human', close=False):
         print("RENDERING THROUGH RUN AGENT")
