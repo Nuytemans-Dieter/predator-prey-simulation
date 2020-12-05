@@ -1,28 +1,34 @@
+from ray.rllib.policy import Policy
+from ray.rllib.models import ModelCatalog
+
+from dqn_hunter.QValues import get_current, get_next
+from dqn_hunter.ReplayMemory import ReplayMemory, Experience, extract_tensors
+from dqn_hunter.Strategy import EpsilonGreedyStrategy
+
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
-from ray.rllib.policy import Policy
-from ray.rllib.models import ModelCatalog
-from random import random
-from dqn.QValues import get_current, get_next
-from dqn.ReplayMemory import ReplayMemory, Experience, extract_tensors
-from dqn.Strategy import EpsilonGreedyStrategy
 
 
-class DQNPolicy(Policy):
+class HunterPolicy(Policy):
 
     def __init__(self, observation_space, action_space, config):
-        Policy.__init__(self, observation_space, action_space, config)
+        super().__init__(self, observation_space, action_space, config)
         self.observation_space = observation_space
         self.action_space = action_space
         self.config = config
+
+        # GPU settings
+        self.use_cuda = torch.cuda.is_available()
+        self.device = torch.device("cuda" if self.use_cuda else "cpu")
 
         # This attribute will be incremented every time learn_on_batch is called.
         self.iteration = 0
         # The current time step.
         self.current_step = 0
 
+        # Agent parameters.
         self.lr = self.config["lr"]
         self.gamma = self.config["gamma"]
         self.target_update_frequency = self.config["target_update_frequency"]
@@ -33,10 +39,6 @@ class DQNPolicy(Policy):
 
         # Replay memory
         self.memory = ReplayMemory(self.config["replay_memory_size"])
-
-        # GPU settings
-        self.use_cuda = torch.cuda.is_available()
-        self.device = torch.device("cuda" if self.use_cuda else "cpu")
 
         # Policy network
         self.policy_net = ModelCatalog.get_model_v2(
@@ -55,7 +57,6 @@ class DQNPolicy(Policy):
             num_outputs=4,
             name="DQNModel",
             model_config=self.config["dqn_model"],
-
             framework="torch",
         ).to(self.device, non_blocking=True)
 

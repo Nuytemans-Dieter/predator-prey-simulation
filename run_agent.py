@@ -5,6 +5,7 @@ from dqn import DQNTrainer, DQNModel
 import json
 import ray
 
+
 if __name__ == "__main__":
     # Read configuration file.
     with open('config.JSON') as config_file:
