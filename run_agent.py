@@ -1,6 +1,6 @@
 from ray import tune
 from ray.rllib.models import ModelCatalog
-from dqn import DQNTrainer, DQNModel
+from dqn_hunter import DQNTrainer, DQNModel
 
 import json
 import ray
@@ -26,9 +26,9 @@ if __name__ == "__main__":
         # Configuration.
         config={
             # Predator environment.
-            # "env": "gym_predatorprey:predator-v0",
+            "env": "gym_predatorprey:predator-v0",
             # Prey environment.
-            "env": "gym_prey:prey-v0",
+            # "env": "gym_prey:prey-v0",
             # Configuration environment.
             "env_config":
                 {
