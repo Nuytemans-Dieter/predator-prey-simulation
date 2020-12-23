@@ -91,3 +91,19 @@ class EnvironmentSimulator:
 
     def get_distance_squared(self, loc1, loc2):
         return loc1[0] + loc2[0] + loc1[1] + loc2[1]
+
+    def print_step_data(self):
+        print('\nTime step ' + str(self.time))
+        print('Num preys: ' + str(self.num_prey_data[-1]))
+        print('Num hunters: ' + str(self.num_hunter_data[-1]))
+
+        print("\nBirth statistics")
+        print("Born preys: " + str(self.preys_born))
+        print("Born hunters: " + str(self.hunters_born))
+
+        print("\nPrey deaths")
+        print("By age: " + str(self.prey_deaths_by_age))
+        print("By eaten: " + str(self.prey_deaths_by_eaten))
+        print("Hunter deaths")
+        print("By age: " + str(self.hunter_deaths_by_age))
+        print("By energy: " + str(self.hunter_deaths_by_energy))

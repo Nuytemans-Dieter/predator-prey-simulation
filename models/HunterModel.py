@@ -12,6 +12,9 @@ class HunterModel(Model):
         self.max_age = 50
 
     def create_agent(self):
+        self.total = self.total + 1
+        name = "hunter " + str(self.total)
+
         location = (
             randrange(0, self.environment.size_x),
             randrange(0, self.environment.size_y)
@@ -34,6 +37,7 @@ class HunterModel(Model):
             location,
             max_age,
             energy_to_reproduce,
-            energy_per_prey_eaten
+            energy_per_prey_eaten,
+            name
         )
         self.agents.append( hunter )

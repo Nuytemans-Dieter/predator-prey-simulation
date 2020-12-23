@@ -1,12 +1,21 @@
+import ray
 from ray import tune
 from ray.rllib.models import ModelCatalog
-from dqn_hunter import DQNTrainer, DQNModel
 
+from dqn import DQNTrainer, DQNModel
 import json
-import ray
 
 
 if __name__ == "__main__":
+
+    # TODO: Change policy depending on the agents you train. For hunters: num_outputs = 5. For preys: 4.
+    # At the moment, we change this manually.
+    # TODO: Different model for hunters and preys? Wouter does this.
+    # TODO: Investigate reward functions. "calculate_reward_differential" returns imaginary numbers.
+    # What reward function is better? Experiment with results.
+    # TODO: Create Tensorboard Graphs.
+    # TODO: Train hunters and preys against each other.
+
     # Read configuration file.
     with open('config.JSON') as config_file:
         config = json.load(config_file)
@@ -23,6 +32,7 @@ if __name__ == "__main__":
         checkpoint_at_end=True,
         # Do a total of 1000 episodes.
         stop={"episodes_total": 1000},
+        # stop={timesteps_total:200000},
         # Configuration.
         config={
             # Predator environment.

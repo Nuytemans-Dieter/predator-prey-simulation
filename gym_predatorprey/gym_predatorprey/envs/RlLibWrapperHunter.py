@@ -1,82 +1,64 @@
 from random import randrange
-from visuals.renderer import Renderer
-from ray.tune import register_env
 from EnvironmentSimulator import EnvironmentSimulator
+from visuals.renderer import Renderer
+from ray.rllib.env import MultiAgentEnv
 
+import datetime
 import json
 import gym as gym
-import datetime
 import numpy as np
 
 
-class RlLibWrapperHunter(gym.Env):
+class RlLibWrapperHunter(gym.Env, MultiAgentEnv):
 
     def __init__(self, config):
-        # Actions: Up, down, left, right, reproduce.
+        # print("RlLibWrapperHunter: __init__")
+
+        # The action space ranges [0, 3] where:
+        #  `0` move up
+        #  `1` move down
+        #  `2` move left
+        #  `3` move right
+        #  `4` reproduce (if hunter has enough energy)
         self.action_space = gym.spaces.Discrete(5)
-        # Observation looks like: [age, energy, closestX, closestY]
+
+        # Observation           min         max:
+        # age                   0           max age
+        # energy                0
+        # x closest hunter      -width      width
+        # y closest hunter      -height     height
+        low = np.array([0, 0, -config['size_x'], -config['size_y']], dtype=np.float32)
+        high = np.array([config['max_age_hunter'], float('inf'), config['size_x'], config['size_y']], dtype=np.float32)
         self.observation_space = gym.spaces.Box(
-            np.array([0, 0, -config['size_x'], -config['size_y']], dtype=np.float32),
-            np.array([config['max_age_hunter'], 1000, config['size_x'], config['size_y']], dtype=np.float32),
+            low=low,
+            high=high,
             dtype=np.float32
         )
-
-        # ToDo. Specify the max energy level that a hunter can have.
 
         # Configuration environment.
         self.config = config
 
-        # Simulator.
-        self.simulator = EnvironmentSimulator(config)
-
-        # Number of hunters and preys.
-        self.start_num_hunters = config['start_num_hunters']
-        self.start_num_preys = config['start_num_preys']
+        # Max amount of steps per episode.
+        self.max_steps = config['max_steps']
 
         # The maximum amount of time for one timestep.
         self.time_limit = config['step_limit_time']
 
-        # Populate the environment.
-        i = 0
-        while i < max(self.start_num_hunters, self.start_num_preys):
-            if i < self.start_num_hunters:
-                self.simulator.spawn_hunter()
-            if i < self.start_num_preys:
-                self.simulator.spawn_prey()
-            i += 1
-
-        print('START: HUNTER SIMULATION')
-
-        # Visualize environment.
-        # self.renderer = Renderer(self.simulator, config)
+        # Reset the environment to the start of an episode.
+        self.reset()
 
     def reset(self):
-        print("RESETTING THE ENVIRONMENT THROUGH RUN AGENT")
+        # print("RlLibWrapperHunter: reset")
 
-        # Reset the environment.
-        self.simulator.time = 0
+        # Create new simulator.
         self.simulator = EnvironmentSimulator(self.config)
 
-        # Provide an initial observation.
-        is_group_dead = self.simulator.preyModel.agents.__len__() == 0 or self.simulator.hunterModel.agents.__len__() == 0
-        reward = self.simulator.hunterModel.calculate_reward(self.start_num_preys, self.start_num_preys, 1.2)
+        # First time step.
+        self.simulator.time = 0
 
-        obs = []
-        for hunter in self.simulator.hunterModel.agents:
-            obs.append((
-                hunter.get_state(),
-                        (not self.simulator.hunterModel.agents.count(prey) > 0) or
-                        is_group_dead,
-                {}
-            ))
-
-        # TODO return obs instead of this placeholder.
-        return np.array((4, 4, 2, 2))
-
-    def step(self, action):
-        print("PERFORMING A STEP THROUGH RUN AGENT")
-
-        observation, reward, done, reproduce = {}, {}, {}, {}
+        # Number of hunters and preys.
+        self.start_num_hunters = self.config['start_num_hunters']
+        self.start_num_preys = self.config['start_num_preys']
 
         # Populate the environment.
         i = 0
@@ -86,79 +68,116 @@ class RlLibWrapperHunter(gym.Env):
             if i < self.start_num_preys:
                 self.simulator.spawn_prey()
             i += 1
+
+        # Create dictionary for observations.
+        observations = {}
+
+        # Provide an initial observation.
+        for hunter in self.simulator.hunterModel.agents:
+            observations[hunter.name] = hunter.get_state()
+
+        return observations
+
+    def step(self, actions):
+        # print("RlLibWrapperHunter: step")
+
+        # Agents before time step.
+        hunters_before_step = self.simulator.hunterModel.agents.copy()
 
         # Starting time.
         start = datetime.datetime.now()
 
-        hunters = []
-
-        # TODO get an action for all hunters first.
-
-        # Perform random movements/actions for hunters.
+        # Perform actions.
         for hunter in self.simulator.hunterModel.agents:
-
-            # TODO get agent action.
-
-            # Hunter does random action.
-            hunter.do_action(randrange(0, 5))
-            # Put hunter in the original list.
-            hunters.append(hunter)
-
-        # Peform random movements/actions for preys.
+            # Agent does given action.
+            if hunter.name in actions:
+                hunter.do_action(actions[hunter.name])
         for prey in self.simulator.preyModel.agents:
             # Prey does random action.
             prey.do_action(randrange(0, 4))
 
-        # Execute the result of these actions.
-        for hunter in self.simulator.hunterModel.agents:
+        # Max age? Food nearby? Reproduce?
+        hunters = self.simulator.hunterModel.agents.copy()
+        for hunter in hunters:
             hunter.finish_action()
-        for prey in self.simulator.preyModel.agents:
+
+        preys = self.simulator.preyModel.agents.copy()
+        # Max age? Eaten? Reproduce?
+        for prey in preys:
             prey.finish_action()
+
+        # Next timestep.
+        self.simulator.time += 1
 
         # Gather step data.
         self.simulator.num_hunter_data.append(self.simulator.hunterModel.get_num_agents())
         self.simulator.num_prey_data.append(self.simulator.preyModel.get_num_agents())
-        print('\nTime step ' + str(self.simulator.time))
-        print('Num preys: ' + str(self.simulator.num_prey_data[-1]))
-        print('Num hunters: ' + str(self.simulator.num_hunter_data[-1]))
 
-        # Next timestep in simulator.
-        self.simulator.time += 1
-        # Render state of environment.
-        # self.renderer.render_state()
+        # Print step data.
+        # self.simulator.print_step_data()
 
         # Calculate joint reward.
-        num_agents_before = hunters.__len__()
+        num_agents_before = hunters_before_step.__len__()
         num_agents_after = self.simulator.hunterModel.agents.__len__()
         reward = self.simulator.hunterModel.calculate_reward(num_agents_before, num_agents_after, 1.2)
 
         # Ending time.
         end = datetime.datetime.now()
+
         # Difference in time.
         delta = (end - start).seconds
-        # Whether to stop the episode or not (because it takes to long).
-        timeout = delta >= self.time_limit
 
+        # Whether to stop the episode or not...
+        timeout = delta >= self.time_limit  # Because it takes to long.
+        last_step = self.simulator.time == self.max_steps  # Because we have reached the last step.
+
+        # Are all hunters or preys dead?
         is_group_dead = self.simulator.preyModel.agents.__len__() == 0 or self.simulator.hunterModel.agents.__len__() == 0
 
-        obs = []
-        i = 0
-        for hunter in hunters:
-            # TODO Currently the agents execute a random action. This needs to be the specified action.
-            observation[i] = np.array(hunter.get_state())
-            done[i] = bool(
-                        timeout or \
-                      (not self.simulator.hunterModel.agents.count(prey) > 0) or \
-                      is_group_dead
-                    )
-            i = i + 1
-        if is_group_dead:
-            self.reset()
+        # Create dictionaries for observations, rewards and dones.
+        observations = {}
+        rewards = {}
+        dones = {}
 
-        print(observation)
+        # Get observations, rewards, dones from hunters before step.
+        for hunter in hunters_before_step:
+            observations[hunter.name] = hunter.get_state()
+            rewards[hunter.name] = reward
+            # Check if hunter stil exists after step.
+            # If not, it must have died (energy loss or maximum age).
+            done = (not self.simulator.hunterModel.agents.count(hunter) > 0) \
+                   or is_group_dead \
+                   or timeout \
+                   or last_step
+            dones[hunter.name] = done
 
-        return [observation, reward, done, {}]
+        # Get observations, rewards, dones from hunters born during step.
+        for hunter in self.simulator.hunterModel.agents:
+            # Found new hunter.
+            if (not hunters_before_step.count(hunter) > 0):
+                observations[hunter.name] = hunter.get_state()
+                rewards[hunter.name] = reward
+                done = is_group_dead or timeout or last_step
+                dones[hunter.name] = done
+
+        # Stop episode if..
+        # 1) All agents are dead
+        # 2) Step execution time is too high
+        # 3) Reached maximum step.
+        if is_group_dead or timeout or last_step:
+            dones['__all__'] = True
+        else:
+            dones['__all__'] = False
+
+        # print(observations)
+        # print(dones)
+        return observations, rewards, dones, {}
 
     def render(self, mode='human', close=False):
-        print("RENDERING THROUGH RUN AGENT")
-        return 0
+        print("RlLibWrapperHunter: render")
+        pass
+
+    def close(self):
+        print("RlLibWrapperHunter: close")
+        pass
+

@@ -4,6 +4,7 @@ class Model:
         self.environment = environment
         self.agents = []
         self.config = config
+        self.total = 0
 
     def calculate_reward(self, num_agents_before, num_agents_after, exponent):
         return num_agents_before ** exponent

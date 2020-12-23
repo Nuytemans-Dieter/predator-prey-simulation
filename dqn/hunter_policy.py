@@ -1,14 +1,16 @@
-from ray.rllib.policy import Policy
-from ray.rllib.models import ModelCatalog
-
-from dqn_hunter.QValues import get_current, get_next
-from dqn_hunter.ReplayMemory import ReplayMemory, Experience, extract_tensors
-from dqn_hunter.Strategy import EpsilonGreedyStrategy
-
 import torch
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
+
+from ray.rllib.policy import Policy
+from ray.rllib.models import ModelCatalog
+
+from QValues import get_current, get_next
+from ReplayMemory import ReplayMemory, Experience, extract_tensors
+from Strategy import EpsilonGreedyStrategy
+
+import random
 
 
 class HunterPolicy(Policy):
@@ -18,6 +20,7 @@ class HunterPolicy(Policy):
         self.observation_space = observation_space
         self.action_space = action_space
         self.config = config
+        self.action_shape = action_space.n
 
         # GPU settings
         self.use_cuda = torch.cuda.is_available()
@@ -25,6 +28,7 @@ class HunterPolicy(Policy):
 
         # This attribute will be incremented every time learn_on_batch is called.
         self.iteration = 0
+
         # The current time step.
         self.current_step = 0
 
@@ -83,7 +87,7 @@ class HunterPolicy(Policy):
                         strategy=None,
                         **kwargs):
 
-        print("Compute Actions")
+        print("DQNPolicy: Compute Actions")
 
         obs_batch_t = torch.tensor(obs_batch).type(torch.FloatTensor)
 
@@ -93,17 +97,26 @@ class HunterPolicy(Policy):
         # Next time step.
         self.current_step += 1
 
+        epsilon_log = []
+
         # Exploitation.
         # Turn off gradient tracking.
         with torch.no_grad():
-            value = self.policy_net(obs_batch_t)
-            action = torch.argmax(value).item()
+            value_batch_t = self.policy_net(obs_batch_t)
+            action_batch_t = torch.argmax(value_batch_t)
 
-        return [action for _ in obs_batch], [], {}
+        # Exploration.
+        for index in range(len(action_batch_t)):
+            epsilon_log.append(rate)
+            if np.random.random() < rate:
+                action_batch_t[index] = random.randint(0, self.action_shape - 1)
+
+        actions = action_batch_t.cpu().detach().tolist()
+        return actions, [], {}
 
     def learn_on_batch(self, samples):
 
-        print("Learn On Batch")
+        print("DQNPolicy: Learn On Batch")
 
         self.iteration += 1
 

@@ -1,4 +1,4 @@
-# Returns the predicted Q-values from the policy_net for the specific state-action paris.
+# Returns the predicted Q-values from the policy_net for the specific state-action pairs.
 def get_current(policy_net, states, actions):
     return policy_net(states).gather(dim=1, index=actions.unsqueeze(1))
 

@@ -5,8 +5,8 @@ class Hunter(Agent):
 
     smell_distance = 2
 
-    def __init__(self, environment, energy, location, max_age, energy_to_reproduce, energy_per_prey_eaten):
-        super().__init__(environment, location, max_age)
+    def __init__(self, environment, energy, location, max_age, energy_to_reproduce, energy_per_prey_eaten, name):
+        super().__init__(environment, location, max_age, name)
         self.energy = energy
         self.energy_to_reproduce = energy_to_reproduce
         self.energy_per_prey_eaten = energy_per_prey_eaten
@@ -45,7 +45,7 @@ class Hunter(Agent):
 
         # Check if max age is reached -> die
         # Check nog enough energy -> die
-        if self.age > self.max_age or self.energy <= 0:
+        if self.age >= self.max_age or self.energy <= 0:
             self.environment.kill_hunter(self)
             if self.energy <= 0:
                 self.environment.hunter_deaths_by_energy += 1
@@ -97,4 +97,4 @@ class Hunter(Agent):
         else:
             closestX = closestLoc.location[0] - self.location[0]
             closestY = closestLoc.location[1] - self.location[1]
-        return self.age, self.energy, closestX, closestY
+        return [self.age, self.energy, closestX, closestY]

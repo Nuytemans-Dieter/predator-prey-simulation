@@ -3,7 +3,7 @@ from random import randrange
 
 class Agent:
 
-    def __init__(self, environment, location, max_age):
+    def __init__(self, environment, location, max_age, name):
 
         self.age = 0
         self.location = (0, 0)
@@ -12,6 +12,7 @@ class Agent:
         self.environment = environment
         self.location = location
         self.max_age = max_age
+        self.name = name
 
     def get_random_move(self):
         direction = randrange(0, 4)

@@ -10,6 +10,9 @@ class PreyModel(Model):
         super().__init__(environment, config)
 
     def create_agent(self):
+        self.total = self.total + 1
+        name = "prey " + str(self.total)
+
         location = (
             randrange(0, self.environment.size_x),
             randrange(0, self.environment.size_y)
@@ -27,6 +30,7 @@ class PreyModel(Model):
             self.environment,
             location,
             max_age,
-            birth_rate
+            birth_rate,
+            name
         )
         self.agents.append(prey)

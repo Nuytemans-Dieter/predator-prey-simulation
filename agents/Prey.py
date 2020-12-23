@@ -1,12 +1,13 @@
 from random import randrange
-
 from agents.Agent import Agent
+
+import numpy as np
 
 
 class Prey(Agent):
 
-    def __init__(self, environment, location, max_age, birth_rate):
-        super().__init__(environment, location, max_age)
+    def __init__(self, environment, location, max_age, birth_rate, name):
+        super().__init__(environment, location, max_age, name)
         self.birth_rate = birth_rate
 
     def do_action(self, action):

@@ -1,6 +1,8 @@
 from torch import nn
+
 from ray.rllib.utils.annotations import override
 from ray.rllib.models.torch.torch_modelv2 import TorchModelV2
+
 from gym.spaces import Box
 
 
@@ -17,7 +19,7 @@ class DQNModel(nn.Module, TorchModelV2):
         self.model_config = model_config
         self.name = name
 
-        # Todo: Specify model of network in config.
+        # Todo: Configure network with model_config.
 
         if isinstance(self.obs_space, Box):
             self.obs_shape = obs_space.shape[0]
