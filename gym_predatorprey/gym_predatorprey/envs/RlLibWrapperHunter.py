@@ -119,7 +119,9 @@ class RlLibWrapperHunter(gym.Env, MultiAgentEnv):
         # Calculate joint reward.
         num_agents_before = hunters_before_step.__len__()
         num_agents_after = self.simulator.hunterModel.agents.__len__()
+
         reward = self.simulator.hunterModel.calculate_reward(num_agents_before, num_agents_after, 1.2)
+        # reward = self.simulator.hunterModel.calculate_reward_differential(num_agents_before, num_agents_after, 1.2)
 
         # Ending time.
         end = datetime.datetime.now()

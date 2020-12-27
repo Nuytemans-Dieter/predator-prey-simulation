@@ -117,7 +117,9 @@ class RlLibWrapperPrey(gym.Env, MultiAgentEnv):
         # Calculate joint reward.
         num_agents_before = preys_before_step.__len__()
         num_agents_after = self.simulator.preyModel.agents.__len__()
+
         reward = self.simulator.preyModel.calculate_reward(num_agents_before, num_agents_after, 1.2)
+        # reward = self.simulator.preyModel.calculate_reward_differential(num_agents_before, num_agents_after, 1.2)
 
         # Ending time.
         end = datetime.datetime.now()

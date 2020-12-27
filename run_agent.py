@@ -39,11 +39,11 @@ if __name__ == "__main__":
     policy_config = {
         "hunter_policy_config": {
             # Predator environment.
-            "env": "gym_predatorprey:predator-v0",
+            # "env": "gym_predatorprey:predator-v0",
             # Prey environment.
             # "env": "gym_prey:prey-v0",
             # Prey & Predator environment.
-            # "env": "gym_multipreypredator:preypredator-v0",
+            "env": "gym_multipreypredator:preypredator-v0",
             # Configuration environment.
             "env_config":
                 {
@@ -78,11 +78,11 @@ if __name__ == "__main__":
         },
         "prey_policy_config": {
             # Predator environment.
-            "env": "gym_predatorprey:predator-v0",
+            # "env": "gym_predatorprey:predator-v0",
             # Prey environment.
             # "env": "gym_prey:prey-v0",
             # Prey & Predator environment.
-            # "env": "gym_multipreypredator:preypredator-v0",
+            "env": "gym_multipreypredator:preypredator-v0",
             # Configuration environment.
             "env_config":
                 {
@@ -131,18 +131,18 @@ if __name__ == "__main__":
         # Custom trainer.
         DQNTrainer,
         checkpoint_at_end=True,
-        # Do a total of 1000 episodes.
-        stop={"episodes_total": 1000},
+        # Do a total of 5000 episodes.
+        stop={"episodes_total": 15000},
         # Or do a total of 200000 steps.
-        # stop={"timesteps_total": 10000},
+        # stop={"timesteps_total": 5000},
         # Configuration.
         config={
             # Predator environment.
-            "env": "gym_predatorprey:predator-v0",
+            # "env": "gym_predatorprey:predator-v0",
             # Prey environment.
             # "env": "gym_prey:prey-v0",
             # Prey & Predator environment.
-            # "env": "gym_multipreypredator:preypredator-v0",
+            "env": "gym_multipreypredator:preypredator-v0",
             # Configuration environment.
             "env_config":
                 {

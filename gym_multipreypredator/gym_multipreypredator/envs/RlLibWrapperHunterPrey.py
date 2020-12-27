@@ -80,7 +80,7 @@ class RlLibWrapperHunterPrey(gym.Env, MultiAgentEnv):
         self.simulator = EnvironmentSimulator(self.config)
 
         # Create renderer for visualization.
-        self.renderer = Renderer(self.simulator, self.config)
+        # self.renderer = Renderer(self.simulator, self.config)
 
         # First time step.
         self.simulator.time = 0
@@ -152,12 +152,14 @@ class RlLibWrapperHunterPrey(gym.Env, MultiAgentEnv):
         # Calculate joint reward for preys.
         num_preys_before = preys_before_step.__len__()
         num_preys_after = self.simulator.preyModel.agents.__len__()
-        reward_for_preys = self.simulator.preyModel.calculate_reward(num_preys_before, num_preys_after, 1.2)
+        # reward_for_preys = self.simulator.preyModel.calculate_reward(num_preys_before, num_preys_after, 1.2)
+        reward_for_preys = self.simulator.preyModel.calculate_reward_differential(num_preys_before, num_preys_after, 1.2)
 
         # Calculate joint reward for hunters.
         num_hunters_before = hunters_before_step.__len__()
         num_hunters_after = self.simulator.hunterModel.agents.__len__()
-        reward_for_hunters = self.simulator.hunterModel.calculate_reward(num_hunters_before, num_hunters_after, 1.2)
+        # reward_for_hunters = self.simulator.hunterModel.calculate_reward(num_hunters_before, num_hunters_after, 1.2)
+        reward_for_hunters = self.simulator.hunterModel.calculate_reward_differential(num_hunters_before, num_hunters_after, 1.2)
 
         # Ending time.
         end = datetime.datetime.now()
