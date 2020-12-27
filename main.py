@@ -5,6 +5,7 @@ import gym
 from gym import envs
 import gym_predatorprey
 import gym_prey
+import gym_multipreypredator
 
 from EnvironmentSimulator import EnvironmentSimulator
 from visuals.plotter import Plotter
@@ -28,7 +29,7 @@ if __name__ == '__main__':
     renderer = Renderer(env, config)
 
     print('Create env')
-    test = gym.make('prey-v0', config=config)
+    test = gym.make('preypredator-v0', config=config)
     print('Do step')
     test.step(1)
     print('Reset')

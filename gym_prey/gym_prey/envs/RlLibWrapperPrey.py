@@ -112,7 +112,7 @@ class RlLibWrapperPrey(gym.Env, MultiAgentEnv):
         self.simulator.num_prey_data.append(self.simulator.preyModel.get_num_agents())
 
         # Print step data.
-        self.simulator.print_step_data()
+        # self.simulator.print_step_data()
 
         # Calculate joint reward.
         num_agents_before = preys_before_step.__len__()
@@ -167,8 +167,8 @@ class RlLibWrapperPrey(gym.Env, MultiAgentEnv):
         else:
             dones['__all__'] = False
 
-        print(observations)
-        print(dones)
+        # print(observations)
+        # print(dones)
         return observations, rewards, dones, {}
 
     def render(self, mode='human', close=False):

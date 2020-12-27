@@ -6,9 +6,9 @@ import numpy as np
 from ray.rllib.policy import Policy
 from ray.rllib.models import ModelCatalog
 
-from QValues import get_current, get_next
-from ReplayMemory import ReplayMemory, Experience, extract_tensors
-from Strategy import EpsilonGreedyStrategy
+from dqn.QValues import get_current, get_next
+from dqn.ReplayMemory import ReplayMemory, Experience, extract_tensors
+from dqn.Strategy import EpsilonGreedyStrategy
 
 import random
 
@@ -87,7 +87,7 @@ class HunterPolicy(Policy):
                         strategy=None,
                         **kwargs):
 
-        print("DQNPolicy: Compute Actions")
+        # print("DQNPolicy: Compute Actions")
 
         obs_batch_t = torch.tensor(obs_batch).type(torch.FloatTensor)
 
@@ -103,7 +103,7 @@ class HunterPolicy(Policy):
         # Turn off gradient tracking.
         with torch.no_grad():
             value_batch_t = self.policy_net(obs_batch_t)
-            action_batch_t = torch.argmax(value_batch_t)
+            action_batch_t = torch.argmax(value_batch_t, axis=1)
 
         # Exploration.
         for index in range(len(action_batch_t)):
@@ -116,7 +116,7 @@ class HunterPolicy(Policy):
 
     def learn_on_batch(self, samples):
 
-        print("DQNPolicy: Learn On Batch")
+        # print("DQNPolicy: Learn On Batch")
 
         self.iteration += 1
 
@@ -183,3 +183,4 @@ class HunterPolicy(Policy):
         if "dqn_model" in weights:
             self.policy_net.load_state_dict(weights["dqn_model"], strict=True)
             self.policy_net.to(self.device, non_blocking=False)
+

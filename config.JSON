@@ -1,6 +1,6 @@
 {
-  "start_num_hunters":      2,
-  "start_num_preys":        5,
+  "start_num_hunters":      1,
+  "start_num_preys":        3,
   "size_x":                 10,
   "size_y":                 10,
   "fill_size":              8,

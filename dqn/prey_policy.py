@@ -103,7 +103,7 @@ class PreyPolicy(Policy):
         # Turn off gradient tracking.
         with torch.no_grad():
             value_batch_t = self.policy_net(obs_batch_t)
-            action_batch_t = torch.argmax(value_batch_t)
+            action_batch_t = torch.argmax(value_batch_t, axis=1)
 
         # Exploration.
         for index in range(len(action_batch_t)):
