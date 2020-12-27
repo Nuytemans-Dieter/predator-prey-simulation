@@ -18,13 +18,13 @@ def policy_mapping(agent_name):
 
 
 if __name__ == "__main__":
-    # TODO: Change policy depending on the agents you train. For hunters: num_outputs = 5. For preys: 4.
-    # At the moment, we change this manually.
     # TODO: Different model for hunters and preys? Wouter does this.
     # TODO: Investigate reward functions. "calculate_reward_differential" returns imaginary numbers.
     # What reward function is better? Experiment with results.
     # TODO: Create Tensorboard Graphs.
-    # TODO: Train hunters and preys against each other.
+    # For preys against random behaviour.
+    # For hunters against random behaviour
+    # For hunters and preys training against each other.
 
     # Read configuration file.
     with open('config.JSON') as config_file:
