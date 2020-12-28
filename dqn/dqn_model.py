@@ -19,8 +19,6 @@ class DQNModel(nn.Module, TorchModelV2):
         self.model_config = model_config
         self.name = name
 
-        # Todo: Configure network with model_config.
-
         if isinstance(self.obs_space, Box):
             self.obs_shape = obs_space.shape[0]
         else:

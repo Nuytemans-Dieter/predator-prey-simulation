@@ -12,7 +12,7 @@ class Model:
     def calculate_reward_differential(self, num_agents_before, num_agents_after, exponent):
         difference = num_agents_before - num_agents_after
         # Difference > 0: more agents now than at the start -> Good
-        # Difference = 0: equal amount -> Meh
+        # Difference = 0: equal amount -> Average
         # Difference < 0: less agents now than at the start -> Bad
         difference_altered = abs(difference) ** exponent
         do_flip_sign = difference < 0

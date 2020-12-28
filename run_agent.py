@@ -18,13 +18,6 @@ def policy_mapping(agent_name):
 
 
 if __name__ == "__main__":
-    # TODO: Different model for hunters and preys? Wouter does this.
-    # TODO: Investigate reward functions. "calculate_reward_differential" returns imaginary numbers.
-    # What reward function is better? Experiment with results.
-    # TODO: Create Tensorboard Graphs.
-    # For preys against random behaviour.
-    # For hunters against random behaviour
-    # For hunters and preys training against each other.
 
     # Read configuration file.
     with open('config.JSON') as config_file:
@@ -39,11 +32,11 @@ if __name__ == "__main__":
     policy_config = {
         "hunter_policy_config": {
             # Predator environment.
-            # "env": "gym_predatorprey:predator-v0",
+            "env": "gym_predatorprey:predator-v0",
             # Prey environment.
             # "env": "gym_prey:prey-v0",
             # Prey & Predator environment.
-            "env": "gym_multipreypredator:preypredator-v0",
+            # "env": "gym_multipreypredator:preypredator-v0",
             # Configuration environment.
             "env_config":
                 {
@@ -78,11 +71,11 @@ if __name__ == "__main__":
         },
         "prey_policy_config": {
             # Predator environment.
-            # "env": "gym_predatorprey:predator-v0",
+            "env": "gym_predatorprey:predator-v0",
             # Prey environment.
             # "env": "gym_prey:prey-v0",
             # Prey & Predator environment.
-            "env": "gym_multipreypredator:preypredator-v0",
+            # "env": "gym_multipreypredator:preypredator-v0",
             # Configuration environment.
             "env_config":
                 {
@@ -132,17 +125,17 @@ if __name__ == "__main__":
         DQNTrainer,
         checkpoint_at_end=True,
         # Do a total of 5000 episodes.
-        stop={"episodes_total": 15000},
+        stop={"episodes_total": 100},
         # Or do a total of 200000 steps.
         # stop={"timesteps_total": 5000},
         # Configuration.
         config={
             # Predator environment.
-            # "env": "gym_predatorprey:predator-v0",
+            "env": "gym_predatorprey:predator-v0",
             # Prey environment.
             # "env": "gym_prey:prey-v0",
             # Prey & Predator environment.
-            "env": "gym_multipreypredator:preypredator-v0",
+            # "env": "gym_multipreypredator:preypredator-v0",
             # Configuration environment.
             "env_config":
                 {
